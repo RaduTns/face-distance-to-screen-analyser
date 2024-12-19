@@ -1,8 +1,11 @@
 import cv2
 import time
 import logging
+import threading
+import asyncio
 from cvzone.FaceMeshModule import FaceMeshDetector
 
+import time
 
 logging.basicConfig(level=logging.INFO)
 
@@ -28,7 +31,7 @@ class ScreenToFaceDistance:
         return cv2.flip(frame, 1)
 
     def detect_face_landmarks(self, frame):
-        frame, faces = self.face_detector.findFaceMesh(frame, draw=True)
+        frame, faces = self.face_detector.findFaceMesh(frame, draw=False)
         if not faces:
             print("No face detected")
             return None, None
@@ -60,16 +63,25 @@ class ScreenToFaceDistance:
             # Display the live capture if enabled
             if self.display:
                 self.show_frame(frame)
+        time.sleep(self.interval)
 
     def show_frame(self, frame):
         cv2.imshow("Image", frame)
         cv2.waitKey(1)
 
+    async def rule_20_20_20(self):
+        while True:
+            await asyncio.sleep(1200)
+            print('Your eyes should take a 20 second break from the screen')
+            await asyncio.sleep(20)
+            print('That should be enough')
+
     def start(self):
+        threading.Thread(target=lambda: asyncio.run(self.rule_20_20_20()), daemon=True).start()
         try:
             while True:
                 self.analyze_frame()
-                time.sleep(self.interval)
+                self.rule_20_20_20()
         except KeyboardInterrupt:
             logging.info("Stopped by user")
         finally:
