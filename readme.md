@@ -5,5 +5,5 @@ This project aims to help people determine healthier habits while using Computer
 * Smart way of measuring *Focal Length* (project is not based on depth sensors)
 * Taking in consideration different placements for the camera
 * Creating a user-friendly UI
-* Implementing the 20-20-20 rule
+* Implementing the 20-20-20 rule (done)
 * Tbd..
